@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Image Resize — Free Image Resizer &amp; Cropper (Instagram, YouTube, Passport) | S3eidat Tools</title>
+<meta name="description" content="Resize and crop images to exact sizes in your browser: pixels or percent, aspect lock, Instagram, story, YouTube, X header and passport presets, draggable crop box, batch, high-quality downscaling. Nothing uploaded.">
+<meta property="og:title" content="Image Resize — free, private resizer and cropper">
+<meta property="og:description" content="Resize and crop images to exact sizes, in bulk. Runs 100% in your browser.">
+<meta property="og:image" content="screenshot.png">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+</head>
+<body data-tool="image-resize">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Image Resize</h1>
+    <p>Resize and crop images to exact sizes: social media presets, passport photos, pixels or percent. One image or a whole batch, all on your device.</p>
+  </section>
+
+  <div class="rz-grid">
+    <section class="card stack">
+      <label class="drop" id="drop">
+        <input type="file" accept="image/*" multiple hidden>
+        <svg class="i"><use href="#i-upload"/></svg>
+        <b>Drop images here</b>
+        <span class="faint">or click to choose · you can also paste</span>
+      </label>
+
+      <label class="field">Preset
+        <select class="select" id="preset">
+          <option value="">Custom size</option>
+          <option value="1080x1080">Instagram post · 1080×1080</option>
+          <option value="1080x1350">Instagram portrait · 1080×1350</option>
+          <option value="1080x1920">Story / Reels / TikTok · 1080×1920</option>
+          <option value="1280x720">YouTube thumbnail · 1280×720</option>
+          <option value="1500x500">X (Twitter) header · 1500×500</option>
+          <option value="851x315">Facebook cover · 851×315</option>
+          <option value="1584x396">LinkedIn banner · 1584×396</option>
+          <option value="1920x1080">Full HD · 1920×1080</option>
+          <option value="413x531">Passport 35×45 mm · 300 dpi</option>
+          <option value="600x600">US passport 2×2 in · 300 dpi</option>
+        </select>
+      </label>
+
+      <div class="seg" id="mode" role="group" aria-label="Resize by">
+        <button aria-pressed="true" data-v="px">Pixels</button>
+        <button aria-pressed="false" data-v="pct">Percent</button>
+      </div>
+
+      <div class="rz-dims" id="pxBox">
+        <label class="field">Width<input class="input" type="number" id="w" min="1" max="16384" placeholder="auto" inputmode="numeric"></label>
+        <button class="btn icon rz-lock" id="lock" aria-pressed="true" title="Keep aspect ratio" aria-label="Keep aspect ratio"><svg class="i"><use href="#i-lock"/></svg></button>
+        <label class="field">Height<input class="input" type="number" id="h" min="1" max="16384" placeholder="auto" inputmode="numeric"></label>
+      </div>
+      <p class="faint rz-note" id="lockNote"></p>
+
+      <div class="stack" id="pctBox" hidden>
+        <label class="field"><span class="row between"><span>Scale</span><output id="pv" class="mono">50%</output></span>
+          <input type="range" id="pct" min="1" max="400" value="50">
+        </label>
+        <div class="seg" id="pctQuick" role="group" aria-label="Quick scale">
+          <button aria-pressed="false" data-v="25">25%</button><button aria-pressed="false" data-v="50">50%</button>
+          <button aria-pressed="false" data-v="75">75%</button><button aria-pressed="false" data-v="200">200%</button>
+        </div>
+      </div>
+
+      <label class="field">Format
+        <select class="select" id="format">
+          <option value="keep">Same as original</option>
+          <option value="jpeg">JPG</option>
+          <option value="png">PNG</option>
+          <option value="webp">WebP</option>
+        </select>
+      </label>
+      <label class="field"><span class="row between"><span>Quality (JPG / WebP)</span><output class="mono" id="qv">90%</output></span>
+        <input type="range" id="quality" min="5" max="100" value="90">
+      </label>
+      <button class="btn primary big" id="zip" disabled><svg class="i"><use href="#i-download"/></svg><span id="zipLbl">Download</span></button>
+    </section>
+
+    <section class="card stack">
+      <div class="row between">
+        <h2>Crop</h2>
+        <div class="row">
+          <div class="seg" id="ratio" role="group" aria-label="Crop ratio">
+            <button aria-pressed="true" data-v="free">Free</button>
+            <button aria-pressed="false" data-v="orig">Original</button>
+            <button aria-pressed="false" data-v="1">1:1</button>
+            <button aria-pressed="false" data-v="0.8">4:5</button>
+            <button aria-pressed="false" data-v="1.5">3:2</button>
+            <button aria-pressed="false" data-v="1.7778">16:9</button>
+            <button aria-pressed="false" data-v="0.5625">9:16</button>
+          </div>
+          <button class="btn ghost small" id="reset"><svg class="i"><use href="#i-refresh"/></svg>Reset</button>
+        </div>
+      </div>
+      <p class="faint rz-note" id="ratioNote" hidden></p>
+
+      <div class="empty" id="empty"><b>No image yet</b>Drop a photo to crop and resize it. Drag the box to move it, drag a corner to resize it, or use the arrow keys.</div>
+      <div class="rz-stage checker" id="stage" hidden>
+        <div class="rz-in" id="stageIn">
+          <img id="pic" alt="Image being cropped">
+          <div class="rz-box" id="box" tabindex="0" role="slider" aria-label="Crop area (arrow keys move, shift+arrows resize)">
+            <span class="rz-h" data-h="nw"></span><span class="rz-h" data-h="ne"></span><span class="rz-h" data-h="sw"></span><span class="rz-h" data-h="se"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row" id="info" hidden>
+        <span class="chip" id="cropInfo"></span>
+        <span class="chip accent" id="outInfo"></span>
+        <span class="grow"></span>
+        <button class="btn small" id="one"><svg class="i"><use href="#i-download"/></svg>This image</button>
+      </div>
+      <ul class="rz-list" id="list"></ul>
+    </section>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
